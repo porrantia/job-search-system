@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Search System — Pablo Orrantia</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f0f0f;
+    --surface: #181818;
+    --border: #2a2a2a;
+    --text: #e8e8e8;
+    --muted: #888;
+    --built: #4ade80;
+    --built-bg: #052e16;
+    --next: #a78bfa;
+    --next-bg: #1e1030;
+    --future: #fb923c;
+    --future-bg: #2d1200;
+    --accent: #e8e8e8;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 0 0 80px;
+  }
+
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 48px 48px 32px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+
+  .legend {
+    display: flex;
+    gap: 24px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  .dot-built { background: var(--built); }
+  .dot-next { background: var(--next); }
+  .dot-future { background: var(--future); }
+
+  .section {
+    margin-bottom: 56px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px;
+    position: relative;
+  }
+
+  .card-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 3px;
+    margin-bottom: 12px;
+  }
+
+  .badge-built { background: var(--built-bg); color: var(--built); }
+  .badge-next { background: var(--next-bg); color: var(--next); }
+  .badge-future { background: var(--future-bg); color: var(--future); }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+
+  .card-body {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .card-body strong {
+    color: #bbb;
+    font-weight: 400;
+  }
+
+  .todo-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .todo-item:last-child { border-bottom: none; }
+
+  .todo-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-top: 7px;
+    flex-shrink: 0;
+  }
+
+  .updated {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    padding-top: 48px;
+    border-top: 1px solid var(--border);
+    margin-top: 48px;
+  }
+
+  @media (max-width: 600px) {
+    header, main { padding-left: 24px; padding-right: 24px; }
+    h1 { font-size: 22px; }
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="eyebrow">porrantia / job-search-system</p>
+  <h1>Job Search Operating System</h1>
+  <p class="subtitle">Austin TX or Remote &nbsp;·&nbsp; GTM Ops, Launch Readiness, Field Enablement</p>
+</header>
+
+<main>
+
+  <div class="legend">
+    <div class="legend-item"><div class="dot dot-built"></div> Built</div>
+    <div class="legend-item"><div class="dot dot-next"></div> Up next</div>
+    <div class="legend-item"><div class="dot dot-future"></div> Future state</div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-title">Discovery layer</span>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="card-badge badge-built"><div class="dot dot-built"></div> Built</div>
+        <div class="card-title">LinkedIn alerts</div>
+        <div class="card-body">5 saved searches, daily email. GTM Operations Manager, Field Enablement Manager, Sales Enablement Manager, GTM Program Manager, Product Ops Austin. Filtered to Austin or Remote.</div>
+      </div>
+      <div class="card">
+        <div class="card-badge badge-built"><div class="dot dot-built"></div> Built</div>
+        <div class="card-title">Indeed alerts</div>
+        <div class="card-body">4 saved searches, daily email. Same four search terms as LinkedIn.</div>
+      </div>
+      <div class="card">
+        <div class="card-badge badge-built"><div class="dot dot-built"></div> Built</div>
+        <div class="card-title">WTTJ notifications</div>
+        <div class="card-body">Profile preferences set, daily curated email. Supplement only. No search functionality, carousel-based. Confirm sender address when first email arrives.</div>
+      </div>
+      <div class="card">
+        <div class="card-badge badge-future"><div class="dot dot-future"></div> Future</div>
+        <div class="card-title">Career page scraper</div>
+        <div class="card-body">Python script via GitHub Actions. Monitors 20+ direct career pages daily, diffs new roles against yesterday, logs to Notion automatically. <strong>One build session in Claude Code.</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-title">Inbox routing</span>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="card-badge badge-built"><div class="dot dot-built"></div> Built</div>
+        <div class="card-title">Rejection filter</div>
+        <div class="card-body">Has the words filter catches rejection and confirmation language across all ATS and company domains. Routes to <strong>Job Search</strong> label, skips inbox.</div>
+      </div>
+      <div class="card">
+        <div class="card-badge badge-built"><div class="dot dot-built"></div> Built</div>
+        <div class="card-title">Alert filter</div>
+        <div class="card-body">Catches both LinkedIn sender addresses. Routes to <strong>Incoming Roles via Filters</strong> label, skips inbox. Indeed and WTTJ senders to be added when confirmed.</div>
+      </div>
+      <div class="card">
+        <div class="card-badge badge-built"><div class="dot dot-built"></div> Built</div>
+        <div class="card-title">ATS domain filter</div>
+        <div class="card-body">Catches Workday, Greenhouse, Lever, Ashby, Canva, Google, Jobvite, iCIMS. Routes to <strong>Job Search</strong> label. Requires quoted sender strings.</div>
+      </div>
+      <div class="card">
+        <div class="card-badge badge-next"><div class="dot dot-next"></div> Up next</div>
+        <div class="card-title">Confirm Indeed + WTTJ senders</div>
+        <div class="card-body">When first alert emails arrive, check the From address and add to the existing Gmail alert filter alongside the LinkedIn addresses.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-title">Lead logging</span>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="card-badge badge-built"><div class="dot dot-built"></div> Built</div>
+        <div class="card-title">Manual Notion logging</div>
+        <div class="card-body">Roles logged to tracker with Pipeline Stage: TO EVALUATE. Bring JD URL to Claude, Claude fetches and evals. Pipeline stages: TO EVALUATE, APPLIED, EVALUATED - PASS, EVALUATED - APPLY ASAP.</div>
+      </div>
+      <div class="card">
+        <div class="card-badge badge-future"><div class="dot dot-future"></div> Future</div>
+        <div class="card-title">Zapier Gmail to Notion</div>
+        <div class="card-body">Trigger on Incoming Roles via Filters label. Creates one Notion row per alert email. <strong>Limitation:</strong> one row per email, not per role. Partial automation only.</div>
+      </div>
+      <div class="card">
+        <div class="card-badge badge-future"><div class="dot dot-future"></div> Future</div>
+        <div class="card-title">Scraper to Notion (best path)</div>
+        <div class="card-body">Career page scraper creates one clean row per role with a direct JD URL. Best path to the morning eval workflow. Tell Claude to evaluate TO EVALUATE rows each morning.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-title">Evaluation + tracker</span>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="card-badge badge-built"><div class="dot dot-built"></div> Built</div>
+        <div class="card-title">Eval workflow</div>
+        <div class="card-body">Bring role here, Claude fetches JD, runs fit read against archetype, hard-pass filters, and proof points. Tier 1 or pass decision in one exchange.</div>
+      </div>
+      <div class="card">
+        <div class="card-badge badge-built"><div class="dot dot-built"></div> Built</div>
+        <div class="card-title">Notion tracker</div>
+        <div class="card-body">Role, Company, Location, Tier, Status, Pipeline Stage, Source, Job URL, Notes, Time to Apply, Date Applied, Customized, Referral. Database ID: 9d0587ea.</div>
+      </div>
+      <div class="card">
+        <div class="card-badge badge-built"><div class="dot dot-built"></div> Built</div>
+        <div class="card-title">Sources + watchlist</div>
+        <div class="card-body">Notion page with job boards, 15 ad tech companies, Austin publishers, search terms, and cadence guidance. Includes career page URLs for direct monitoring.</div>
+      </div>
+      <div class="card">
+        <div class="card-badge badge-future"><div class="dot dot-future"></div> Future</div>
+        <div class="card-title">Morning eval routine</div>
+        <div class="card-body">Once scraper is live: open Claude, say "evaluate my TO EVALUATE rows." Claude pulls from Notion, fetches each JD, runs evals, updates tracker automatically.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-title">Remaining to-dos</span>
+    </div>
+    <div class="card" style="padding: 8px 20px;">
+      <div class="todo-item">
+        <div class="todo-dot" style="background: var(--next);"></div>
+        <span>Confirm Indeed sender address when first alert email arrives, add to Gmail filter</span>
+      </div>
+      <div class="todo-item">
+        <div class="todo-dot" style="background: var(--next);"></div>
+        <span>Confirm WTTJ sender address when first alert email arrives, add to Gmail filter</span>
+      </div>
+      <div class="todo-item">
+        <div class="todo-dot" style="background: var(--future);"></div>
+        <span>Build career page scraper in Claude Code (GitHub Actions, Python, Notion API)</span>
+      </div>
+      <div class="todo-item">
+        <div class="todo-dot" style="background: var(--future);"></div>
+        <span>Set up Zapier Gmail to Notion bridge (optional, partial automation)</span>
+      </div>
+      <div class="todo-item">
+        <div class="todo-dot" style="background: var(--future);"></div>
+        <span>Establish morning eval routine once scraper is live</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="updated">Last updated: June 22, 2026 &nbsp;·&nbsp; porrantia.github.io/job-search-system</div>
+
+</main>
+</body>
+</html>
